@@ -6,7 +6,7 @@ import { Piece } from "./piece";
 import { isOwnFigure } from "@/utils";
 import { CHESS_COLOR } from "@/types/chess";
 import { Square } from "./square";
-import { DndContext } from "@dnd-kit/core";
+import { DndContext, DragOverlay } from "@dnd-kit/core";
 
 export function Board({
   orientation,
@@ -62,6 +62,9 @@ export function Board({
         }
       }}
     >
+      <DragOverlay dropAnimation={null}>
+        {active && <Piece draggable={false} piece={active} />}
+      </DragOverlay>
       <div className="grid grid-flow-col grid-rows-8 w-full auto-cols-max justify-center">
         {Array.from({ length: 64 })
           .map((_, i) => i)

@@ -21,19 +21,21 @@ export function Piece({
   piece: PieceType;
   draggable: boolean;
 }) {
-  const { attributes, listeners, setNodeRef, transform } = useDraggable({
-    id: `piece-${piece.id}`,
-    data: piece,
-    disabled: !draggable,
-  });
+  const { attributes, listeners, setNodeRef, transform, isDragging } =
+    useDraggable({
+      id: `piece-${piece.id}`,
+      data: piece,
+      disabled: !draggable,
+    });
 
   return (
     <Image
       style={
         transform
           ? {
-              transform: `translate3d(${transform.x}px, ${transform.y}px, 0)`,
+              // transform: `translate3d(${transform.x}px, ${transform.y}px, 0)`,
               zIndex: 100,
+              opacity: isDragging ? 0.3 : 1,
             }
           : undefined
       }
