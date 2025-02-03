@@ -12,10 +12,18 @@ import rookWhite from "@/assets/rook-white.svg";
 import kingBlack from "@/assets/king-black.svg";
 import kingWhite from "@/assets/king-white.svg";
 import Image from "next/image";
+import { useDraggable } from "@dnd-kit/core";
 
 export function Piece({ piece }: { piece: PieceType }) {
+  const { attributes, listeners, setNodeRef, transform } = useDraggable({
+    id: `pice-${piece.id}`,
+  });
+
   return (
     <Image
+      ref={setNodeRef}
+      {...listeners}
+      {...attributes}
       src={
         piece.type === "knight"
           ? piece.color === "white"
@@ -44,7 +52,7 @@ export function Piece({ piece }: { piece: PieceType }) {
           : null
       }
       alt="knight"
-      className="mx-auto my-auto"
+      className="mx-auto my-auto z-20 select-none"
     />
   );
 }

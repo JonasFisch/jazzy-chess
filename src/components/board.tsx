@@ -1,19 +1,25 @@
 "use client";
 
-import { PieceType } from "@/types/piece";
+import { PieceType, Position } from "@/types/piece";
 import { useEffect, useState } from "react";
 import { Piece } from "./piece";
-import { getLetterFromNumber } from "@/utils";
+import { getLetterFromNumber, isOwnFigure } from "@/utils";
+import { CHESS_COLOR } from "@/types/chess";
 
 export function Board({
   orientation,
+  playersColor,
   pieces,
+  onMove,
+  canMove,
 }: {
-  orientation: "black" | "white";
+  orientation: CHESS_COLOR;
+  playersColor: CHESS_COLOR;
   pieces: PieceType[];
+  onMove: (piece: PieceType, position: Position) => void;
+  canMove: boolean;
 }) {
   const [screenWidth, setScreenWidth] = useState(0);
-
   useEffect(() => {
     window.addEventListener("resize", () => {
       setScreenWidth(window.innerWidth);
@@ -22,6 +28,8 @@ export function Board({
     setScreenWidth(window.innerWidth);
     return removeEventListener("resize", () => {});
   }, []);
+
+  const [active, setActive] = useState<PieceType | null>();
 
   return (
     <div className="grid grid-flow-col grid-rows-8 w-full auto-cols-max justify-center">
@@ -34,18 +42,35 @@ export function Board({
           const row = Math.floor(i / 8);
           const col = i % 8;
           const isBlack = (row + col) % 2 === 1;
-          const piece = pieces.find(
-            (piece) => piece.position.row === row && piece.position.col === col
-          );
+          const piece =
+            pieces.find(
+              (piece) =>
+                piece.position.row === row && piece.position.col === col
+            ) ?? null;
+          const isActive = active && active?.id === piece?.id;
+
           return (
             <div
               key={i}
               className={`${
                 isBlack ? "bg-slate-400" : "bg-slate-300"
-              } max-h-20 max-w-20 flex relative`}
+              } max-h-20 max-w-20 flex relative select-none`}
               style={{
                 height: `${screenWidth / 8}px`,
                 width: `${screenWidth / 8}px`,
+              }}
+              onClick={() => {
+                // only select own pieces
+                if (isOwnFigure(playersColor, piece)) {
+                  setActive(piece);
+                  return;
+                }
+
+                // if active move to new position
+                if (active) {
+                  onMove(active, { row, col });
+                  setActive(null);
+                }
               }}
             >
               {/* row letter */}
@@ -62,6 +87,12 @@ export function Board({
                 </div>
               )}
 
+              {/* active indicator */}
+              {isActive && (
+                <div className="z-10 h-full w-full absolute bg-indigo-500/70"></div>
+              )}
+
+              {/* piece */}
               {piece && <Piece piece={piece} />}
             </div>
           );
