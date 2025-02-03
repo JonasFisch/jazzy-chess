@@ -16,11 +16,20 @@ import { useDraggable } from "@dnd-kit/core";
 
 export function Piece({ piece }: { piece: PieceType }) {
   const { attributes, listeners, setNodeRef, transform } = useDraggable({
-    id: `pice-${piece.id}`,
+    id: `piece-${piece.id}`,
+    data: piece,
   });
 
   return (
     <Image
+      style={
+        transform
+          ? {
+              transform: `translate3d(${transform.x}px, ${transform.y}px, 0)`,
+              zIndex: 100,
+            }
+          : undefined
+      }
       ref={setNodeRef}
       {...listeners}
       {...attributes}
