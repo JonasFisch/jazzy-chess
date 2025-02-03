@@ -87,6 +87,19 @@ export function Board({
                 isActive={!!isActive}
                 orientation={orientation}
                 screenWidth={screenWidth}
+                onClick={() => {
+                  // only select own pieces
+                  if (isOwnFigure(playersColor, piece)) {
+                    setActive(piece);
+                    return;
+                  }
+
+                  // if active move to new position
+                  if (active) {
+                    onMove(active, { row, col });
+                    setActive(null);
+                  }
+                }}
               >
                 {piece && (
                   <Piece

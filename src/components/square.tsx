@@ -11,6 +11,7 @@ export function Square({
   screenWidth,
   orientation,
   children,
+  onClick,
 }: {
   children: React.ReactNode;
   id: string;
@@ -19,6 +20,7 @@ export function Square({
   isActive: boolean;
   screenWidth: number;
   orientation: CHESS_COLOR;
+  onClick: () => void;
 }) {
   const { isOver, setNodeRef } = useDroppable({
     id: `droppable-${id}`,
@@ -40,19 +42,7 @@ export function Square({
           height: `${screenWidth / 8}px`,
           width: `${screenWidth / 8}px`,
         }}
-        // onClick={() => {
-        //   // only select own pieces
-        //   if (isOwnFigure(playersColor, piece)) {
-        //     setActive(piece);
-        //     return;
-        //   }
-
-        //   // if active move to new position
-        //   if (active) {
-        //     onMove(active, { row, col });
-        //     setActive(null);
-        //   }
-        // }}
+        onClick={onClick}
       >
         {/* row letter */}
         {position.col === (orientation === "black" ? 7 : 0) && (
@@ -70,13 +60,8 @@ export function Square({
 
         {children}
 
-        {/* is-over indicator */}
-        {isOver && (
-          <div className="z-10 h-full w-full absolute bg-indigo-600/70"></div>
-        )}
-
-        {/* active indicator */}
-        {isActive && (
+        {/* active and over indicator */}
+        {(isActive || isOver) && (
           <div className="z-10 h-full w-full absolute bg-indigo-500/70"></div>
         )}
       </div>
