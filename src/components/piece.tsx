@@ -14,10 +14,17 @@ import kingWhite from "@/assets/king-white.svg";
 import Image from "next/image";
 import { useDraggable } from "@dnd-kit/core";
 
-export function Piece({ piece }: { piece: PieceType }) {
+export function Piece({
+  piece,
+  draggable,
+}: {
+  piece: PieceType;
+  draggable: boolean;
+}) {
   const { attributes, listeners, setNodeRef, transform } = useDraggable({
     id: `piece-${piece.id}`,
     data: piece,
+    disabled: !draggable,
   });
 
   return (
@@ -60,6 +67,7 @@ export function Piece({ piece }: { piece: PieceType }) {
             : kingBlack
           : null
       }
+      draggable={false}
       alt="knight"
       className="mx-auto my-auto z-20 select-none"
     />
