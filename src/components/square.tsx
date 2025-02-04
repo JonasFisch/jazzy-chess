@@ -1,7 +1,7 @@
 import { PieceType, Position } from "@/types/piece";
 import { useDroppable } from "@dnd-kit/core";
 import { getLetterFromNumber } from "@/utils";
-import { CHESS_COLOR } from "@/types/chess";
+import { ChessColor } from "@/types/chess";
 
 export function Square({
   id,
@@ -19,7 +19,7 @@ export function Square({
   piece: PieceType | null;
   isActive: boolean;
   screenWidth: number;
-  orientation: CHESS_COLOR;
+  orientation: ChessColor;
   onClick: () => void;
 }) {
   const { isOver, setNodeRef } = useDroppable({

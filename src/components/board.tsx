@@ -4,7 +4,7 @@ import { PieceType, Position } from "@/types/piece";
 import { useEffect, useState } from "react";
 import { Piece } from "./piece";
 import { isOwnFigure } from "@/utils";
-import { CHESS_COLOR } from "@/types/chess";
+import { ChessColor } from "@/types/chess";
 import { Square } from "./square";
 import { DndContext, DragOverlay } from "@dnd-kit/core";
 
@@ -15,8 +15,8 @@ export function Board({
   onMove,
   canMove,
 }: {
-  orientation: CHESS_COLOR;
-  playersColor: CHESS_COLOR;
+  orientation: ChessColor;
+  playersColor: ChessColor;
   pieces: PieceType[];
   onMove: (piece: PieceType, position: Position) => void;
   canMove: boolean;

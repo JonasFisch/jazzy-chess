@@ -3,9 +3,9 @@ export interface Position {
   col: number;
 }
 
-export interface PieceType {
+export type PieceType = {
   id: string;
   color: "black" | "white";
   type: "pawn" | "rook" | "knight" | "bishop" | "queen" | "king";
   position: Position;
-}
+};

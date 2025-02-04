@@ -1,1 +1,1 @@
-export type CHESS_COLOR = "black" | "white";
+export type ChessColor = "black" | "white";

@@ -1,6 +1,6 @@
 import { PieceType } from "@/types/piece";
 
-export const boardStartPieces: PieceType[] = [
+export const defaultStartBoard: PieceType[] = [
   {
     id: "1",
     color: "white",
