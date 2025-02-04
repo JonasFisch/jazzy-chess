@@ -16,7 +16,7 @@ export function createGame({
   const game = Game.create({
     white: playersColor === "white" ? me : null,
     black: playersColor === "black" ? me : null,
-    board_state: { pieces: defaultStartBoard },
+    board_state: { pieces: defaultStartBoard as [] },
     turn: "white",
   });
   return game;
