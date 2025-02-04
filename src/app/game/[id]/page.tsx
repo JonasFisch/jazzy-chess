@@ -2,16 +2,22 @@
 
 import { Board } from "@/components/board";
 import { Button } from "@/components/button";
+import { Footer } from "@/components/footer";
 import { PlayerDetails } from "@/components/player-details";
 import { Game } from "@/schema";
 import { ChessColor } from "@/types/chess";
 import { PieceType, Position } from "@/types/piece";
 import { ArrowPathRoundedSquareIcon } from "@heroicons/react/16/solid";
-import { UserPlusIcon } from "@heroicons/react/24/outline";
+import {
+  SpeakerWaveIcon,
+  SpeakerXMarkIcon,
+  UserPlusIcon,
+} from "@heroicons/react/24/outline";
 import { useAccount, useCoState } from "jazz-react";
 import { createInviteLink, ID } from "jazz-tools";
 import Link from "next/link";
 import { use, useEffect, useState } from "react";
+import useSound from "use-sound";
 
 export default function GamePage({
   params,
@@ -24,12 +30,19 @@ export default function GamePage({
   const myColor = game?.white?.isMe ? "white" : "black";
   const { me } = useAccount();
   const opponent = game?.white?.isMe ? game.black : game?.white;
+  const [muted, setMuted] = useState(false);
+
+  const [play] = useSound("/sounds/wood.mp3", { soundEnabled: !muted });
 
   useEffect(() => {
     if (myColor) {
       setOrientation(myColor);
     }
   }, [myColor]);
+
+  useEffect(() => {
+    play();
+  }, [game?.turn]);
 
   // modify board state
   const handleMove = (piece: PieceType, newPosition: Position) => {
@@ -116,15 +129,17 @@ export default function GamePage({
               <span>Invite</span>
             </Button>
           )}
+          <Button onClick={() => setMuted(!muted)}>
+            {muted ? (
+              <SpeakerXMarkIcon className="size-6" />
+            ) : (
+              <SpeakerWaveIcon className="size-6" />
+            )}
+          </Button>
         </div>
       </main>
       <footer className="row-start-3 flex flex-wrap items-center justify-center">
-        <span>
-          {"Made with ❤️ by "}
-          <a target="_blank" href={"https://jonasfsr.com"}>
-            jonasfsr
-          </a>
-        </span>
+        <Footer />
       </footer>
     </div>
   );

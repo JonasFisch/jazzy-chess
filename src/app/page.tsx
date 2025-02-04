@@ -1,6 +1,7 @@
 "use client";
 
 import { createGame } from "@/actions";
+import { Footer } from "@/components/footer";
 import { Game } from "@/schema";
 import { useAcceptInvite, useAccount } from "jazz-react";
 import { redirect } from "next/navigation";
@@ -46,7 +47,7 @@ export default function Home() {
         </button>
       </main>
       <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center">
-        footer
+        <Footer />
       </footer>
     </div>
   );
