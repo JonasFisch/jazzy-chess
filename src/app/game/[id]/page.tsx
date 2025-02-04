@@ -1,12 +1,17 @@
 "use client";
 
 import { Board } from "@/components/board";
+import { Button } from "@/components/button";
+import { PlayerDetails } from "@/components/player-details";
 import { Game } from "@/schema";
 import { ChessColor } from "@/types/chess";
 import { PieceType, Position } from "@/types/piece";
-import { useCoState } from "jazz-react";
+import { ArrowPathRoundedSquareIcon } from "@heroicons/react/16/solid";
+import { UserPlusIcon } from "@heroicons/react/24/outline";
+import { useAccount, useCoState } from "jazz-react";
 import { createInviteLink, ID } from "jazz-tools";
-import { use, useState } from "react";
+import Link from "next/link";
+import { use, useEffect, useState } from "react";
 
 export default function GamePage({
   params,
@@ -17,6 +22,14 @@ export default function GamePage({
   const game = useCoState(Game, id as ID<Game>);
   const [orientation, setOrientation] = useState<ChessColor>("white");
   const myColor = game?.white?.isMe ? "white" : "black";
+  const { me } = useAccount();
+  const opponent = game?.white?.isMe ? game.black : game?.white;
+
+  useEffect(() => {
+    if (myColor) {
+      setOrientation(myColor);
+    }
+  }, [myColor]);
 
   // modify board state
   const handleMove = (piece: PieceType, newPosition: Position) => {
@@ -67,18 +80,19 @@ export default function GamePage({
 
   return (
     <div className="flex flex-col items-center justify-between min-h-screen sm:p-8 pb-4 gap-16 w-full overflow-hidden">
-      <header className="row-start-1">
-        <h1 className="text-2xl font-bold">JazzyChess</h1>
-        <button
-          onClick={() =>
-            setOrientation(orientation === "black" ? "white" : "black")
-          }
-        >
-          flip
-        </button>
+      <header className="row-start-1 w-full">
+        <div className="w-full flex flex-row justify-between items-center p-4 sm:p-0">
+          <Link href="/" className="">
+            <span>&larr; back</span>
+          </Link>
+          <h1 className="text-2xl font-bold">JazzyChess</h1>
+        </div>
       </header>
-      <main className="flex flex-col items-center gap-8 row-start-2 w-full">
-        <h1 className="text-xl">Board</h1>
+      <main className="flex flex-col items-center gap-4 row-start-2">
+        <PlayerDetails
+          player={opponent}
+          color={myColor == "white" ? "black" : "white"}
+        />
         <Board
           orientation={orientation}
           pieces={boardPieces}
@@ -86,16 +100,31 @@ export default function GamePage({
           onMove={handleMove}
           canMove={true}
         />
-        <button
-          onClick={() => {
-            invite();
-          }}
-        >
-          invite
-        </button>
+        <PlayerDetails player={me} color={myColor} />
+        <div className="w-full justify-center flex items-center gap-4">
+          <Button
+            onClick={() =>
+              setOrientation(orientation === "black" ? "white" : "black")
+            }
+          >
+            <ArrowPathRoundedSquareIcon className="size-5" />
+            <span>Flip Board</span>
+          </Button>
+          {!(game?.white && game.black) && (
+            <Button onClick={() => invite()}>
+              <UserPlusIcon className="size-5" />
+              <span>Invite</span>
+            </Button>
+          )}
+        </div>
       </main>
-      <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center">
-        footer
+      <footer className="row-start-3 flex flex-wrap items-center justify-center">
+        <span>
+          {"Made with ❤️ by "}
+          <a target="_blank" href={"https://jonasfsr.com"}>
+            jonasfsr
+          </a>
+        </span>
       </footer>
     </div>
   );
