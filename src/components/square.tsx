@@ -12,6 +12,7 @@ export function Square({
   orientation,
   children,
   onClick,
+  moveablePositions,
 }: {
   children: React.ReactNode;
   id: string;
@@ -21,6 +22,7 @@ export function Square({
   screenWidth: number;
   orientation: ChessColor;
   onClick: () => void;
+  moveablePositions: Position[];
 }) {
   const { isOver, setNodeRef } = useDroppable({
     id: `droppable-${id}`,
@@ -63,6 +65,17 @@ export function Square({
         {/* active and over indicator */}
         {(isActive || isOver) && (
           <div className="z-10 h-full w-full absolute bg-indigo-500/70"></div>
+        )}
+
+        {/* moveable indicator */}
+        {moveablePositions.some(
+          (moveablePosition) =>
+            moveablePosition.row === position.row &&
+            moveablePosition.col === position.col
+        ) && (
+          <div className="z-20 h-full w-full absolute flex flex-row justify-center items-center">
+            <div className="h-1/3 w-1/3 rounded-full bg-indigo-500/70"></div>
+          </div>
         )}
       </div>
     </div>

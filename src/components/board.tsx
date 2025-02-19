@@ -7,6 +7,7 @@ import { isOwnFigure } from "@/utils";
 import { ChessColor } from "@/types/chess";
 import { Square } from "./square";
 import { DndContext, DragOverlay } from "@dnd-kit/core";
+import { getAvailableMoves } from "@/chess-utils";
 
 export function Board({
   orientation,
@@ -32,6 +33,18 @@ export function Board({
   }, []);
 
   const [active, setActive] = useState<PieceType | null>();
+  const [moveablePositions, setMoveablePositions] = useState<Position[]>([
+    { row: 0, col: 0 },
+  ]);
+
+  // set moveable indicator
+  useEffect(() => {
+    if (active) {
+      setMoveablePositions(getAvailableMoves(active, pieces));
+    } else {
+      setMoveablePositions([]);
+    }
+  }, [active]);
 
   return (
     <DndContext
@@ -88,6 +101,7 @@ export function Board({
                 position={{ row, col }}
                 piece={piece}
                 isActive={!!isActive}
+                moveablePositions={moveablePositions}
                 orientation={orientation}
                 screenWidth={screenWidth}
                 onClick={() => {

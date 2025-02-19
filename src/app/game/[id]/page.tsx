@@ -7,6 +7,7 @@ import { PlayerDetails } from "@/components/player-details";
 import { Game } from "@/schema";
 import { ChessColor } from "@/types/chess";
 import { PieceType, Position } from "@/types/piece";
+import { moveIsValid } from "@/utils";
 import { ArrowPathRoundedSquareIcon } from "@heroicons/react/16/solid";
 import {
   SpeakerWaveIcon,
@@ -49,12 +50,11 @@ export default function GamePage({
     if (!game || game.turn !== myColor) return;
 
     // TODO: check if move is valid
+    if (!moveIsValid(piece, newPosition, game.board_state.pieces)) return;
 
     setBoardPieces(
       boardPieces
         .map((p) => {
-          // TODO: check if move is valid!
-
           // handle hitting pieces
           if (
             p.position.row === newPosition.row &&
